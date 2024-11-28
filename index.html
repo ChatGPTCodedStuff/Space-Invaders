@@ -74,11 +74,12 @@ class Bullet {
 }
 
 class Alien {
-    constructor(x, y) {
+    constructor(x, y, image) {
         this.x = x;
         this.y = y;
         this.width = 40;
         this.height = 30;
+        this.image = image; // Store the image
     }
 
     update() {
@@ -86,8 +87,7 @@ class Alien {
     }
 
     draw() {
-        ctx.fillStyle = 'red';
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height); // Use drawImage to draw the invader
     }
 }
 
@@ -101,14 +101,19 @@ function init() {
     gameOver = false;
     lives = 3;
 
-    // Create aliens
-    for (let row = 0; row < 4; row++) {
-        for (let col = 0; col < 10; col++) {
-            aliens.push(new Alien(70 + col * 60, 50 + row * 50));
-        }
-    }
+    // Load the invader image
+    const invaderImage = new Image();
+    invaderImage.src = 'assets/images/invader.png'; // Path to your invader image
 
-    gameLoop();
+    invaderImage.onload = function() {
+        // Create aliens once the image is loaded
+        for (let row = 0; row < 4; row++) {
+            for (let col = 0; col < 10; col++) {
+                aliens.push(new Alien(70 + col * 60, 50 + row * 50, invaderImage));
+            }
+        }
+        gameLoop(); // Start the game loop after the image is loaded
+    };
 }
 
 // Update game state
@@ -157,7 +162,7 @@ function update() {
         level++;
         for (let row = 0; row < 4; row++) {
             for (let col = 0; col < 10; col++) {
-                aliens.push(new Alien(70 + col * 60, 50 + row * 50));
+                aliens.push(new Alien(70 + col * 60, 50 + row * 50, alienImage));
             }
         }
     }
@@ -208,20 +213,4 @@ document.addEventListener('keydown', (e) => {
 
 document.addEventListener('keyup', (e) => {
     if (e.key === 'ArrowLeft') leftPressed = false;
-    if (e.key === 'ArrowRight') rightPressed = false;
-});
-
-// Main game loop
-function gameLoop() {
-    if (gameOver) return;
-
-    update();
-    draw();
-    requestAnimationFrame(gameLoop);
-}
-
-// Initialize the game when the page loads
-init();
-</script>
-</body>
-</html>
+    if (e.key === 'ArrowRight') rightPressed = fal
